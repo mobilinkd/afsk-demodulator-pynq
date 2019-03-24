@@ -95,7 +95,8 @@
 #########
 !*.py
 !*.ipynb
-!pynq/
+!**/Pynq/
+**/.ipynb_checkpoints/
 #########
 # Markdown files
 #########
