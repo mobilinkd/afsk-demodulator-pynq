@@ -95,9 +95,16 @@
 #########
 !*.py
 !*.ipynb
+!*.png
 !**/Pynq/
 **/.ipynb_checkpoints/
 #########
 # Markdown files
 #########
 !*.md
+#########
+# Bitstream files
+#########
+!*.bit
+!*.hwh
+!*.tcl
