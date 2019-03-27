@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-<EDKSYSTEM EDWVERSION="1.2" TIMESTAMP="Tue Mar 26 19:33:13 2019" VIVADOVERSION="2018.3">
+<EDKSYSTEM EDWVERSION="1.2" TIMESTAMP="Tue Mar 26 22:00:18 2019" VIVADOVERSION="2018.3">
 
   <SYSTEMINFO ARCH="zynq" BOARD="tul.com.tw:pynq-z2:part0:1.0" DEVICE="7z020" NAME="design_1" PACKAGE="clg400" SPEEDGRADE="-1"/>
 
@@ -672,14 +672,14 @@
         </BUSINTERFACE>
       </BUSINTERFACES>
     </MODULE>
-    <MODULE COREREVISION="1903261930" FULLNAME="/demodulator/correlator" HWVERSION="1.0" INSTANCE="demodulator_correlator" IPTYPE="PERIPHERAL" IS_ENABLE="1" MODCLASS="PERIPHERAL" MODTYPE="demodulate3" VLNV="Mobilinkd:afsk:demodulate3:1.0">
+    <MODULE COREREVISION="1903262156" FULLNAME="/demodulator/correlator" HWVERSION="1.0" INSTANCE="demodulator_correlator" IPTYPE="PERIPHERAL" IS_ENABLE="1" MODCLASS="PERIPHERAL" MODTYPE="demodulate3" VLNV="xilinx.com:hls:demodulate3:1.0">
       <DOCUMENTS/>
       <PARAMETERS>
-        <PARAMETER NAME="Component_Name" VALUE="design_1_demodulate3_0_0"/>
+        <PARAMETER NAME="Component_Name" VALUE="design_1_demodulate3_0_1"/>
         <PARAMETER NAME="clk_period" VALUE="10"/>
         <PARAMETER NAME="machine" VALUE="64"/>
         <PARAMETER NAME="combinational" VALUE="0"/>
-        <PARAMETER NAME="latency" VALUE="undef"/>
+        <PARAMETER NAME="latency" VALUE="198"/>
         <PARAMETER NAME="II" VALUE="x"/>
         <PARAMETER NAME="EDK_IPTYPE" VALUE="PERIPHERAL"/>
       </PARAMETERS>
@@ -694,84 +694,67 @@
             <CONNECTION INSTANCE="rst_ps7_0_100M" PORT="peripheral_aresetn"/>
           </CONNECTIONS>
         </PORT>
-        <PORT DIR="I" NAME="ap_start" SIGIS="undef" SIGNAME="demodulator_dma_mm2s_prmry_reset_out_n">
-          <CONNECTIONS>
-            <CONNECTION INSTANCE="demodulator_dma" PORT="mm2s_prmry_reset_out_n"/>
-          </CONNECTIONS>
-        </PORT>
-        <PORT DIR="O" NAME="ap_done" SIGIS="undef"/>
-        <PORT DIR="O" NAME="ap_idle" SIGIS="undef"/>
-        <PORT DIR="O" NAME="ap_ready" SIGIS="undef"/>
-        <PORT DIR="I" NAME="instream_TVALID" SIGIS="undef" SIGNAME="demodulator_correlator_instream_TVALID">
+        <PORT DIR="I" NAME="input_r_TVALID" SIGIS="undef" SIGNAME="demodulator_correlator_input_r_TVALID">
           <CONNECTIONS>
             <CONNECTION INSTANCE="demodulator_dma" PORT="m_axis_mm2s_tvalid"/>
           </CONNECTIONS>
         </PORT>
-        <PORT DIR="O" NAME="instream_TREADY" SIGIS="undef" SIGNAME="demodulator_correlator_instream_TREADY">
+        <PORT DIR="O" NAME="input_r_TREADY" SIGIS="undef" SIGNAME="demodulator_correlator_input_r_TREADY">
           <CONNECTIONS>
             <CONNECTION INSTANCE="demodulator_dma" PORT="m_axis_mm2s_tready"/>
           </CONNECTIONS>
         </PORT>
-        <PORT DIR="I" LEFT="15" NAME="instream_TDATA" RIGHT="0" SIGIS="undef" SIGNAME="demodulator_correlator_instream_TDATA">
+        <PORT DIR="I" LEFT="15" NAME="input_r_TDATA" RIGHT="0" SIGIS="undef" SIGNAME="demodulator_correlator_input_r_TDATA">
           <CONNECTIONS>
             <CONNECTION INSTANCE="demodulator_dma" PORT="m_axis_mm2s_tdata"/>
           </CONNECTIONS>
         </PORT>
-        <PORT DIR="I" LEFT="0" NAME="instream_TDEST" RIGHT="0" SIGIS="undef"/>
-        <PORT DIR="I" LEFT="1" NAME="instream_TKEEP" RIGHT="0" SIGIS="undef" SIGNAME="demodulator_correlator_instream_TKEEP">
+        <PORT DIR="I" LEFT="0" NAME="input_r_TDEST" RIGHT="0" SIGIS="undef"/>
+        <PORT DIR="I" LEFT="1" NAME="input_r_TKEEP" RIGHT="0" SIGIS="undef" SIGNAME="demodulator_correlator_input_r_TKEEP">
           <CONNECTIONS>
             <CONNECTION INSTANCE="demodulator_dma" PORT="m_axis_mm2s_tkeep"/>
           </CONNECTIONS>
         </PORT>
-        <PORT DIR="I" LEFT="1" NAME="instream_TSTRB" RIGHT="0" SIGIS="undef"/>
-        <PORT DIR="I" LEFT="0" NAME="instream_TUSER" RIGHT="0" SIGIS="undef"/>
-        <PORT DIR="I" LEFT="0" NAME="instream_TLAST" RIGHT="0" SIGIS="undef" SIGNAME="demodulator_correlator_instream_TLAST">
+        <PORT DIR="I" LEFT="1" NAME="input_r_TSTRB" RIGHT="0" SIGIS="undef"/>
+        <PORT DIR="I" LEFT="0" NAME="input_r_TUSER" RIGHT="0" SIGIS="undef"/>
+        <PORT DIR="I" LEFT="0" NAME="input_r_TLAST" RIGHT="0" SIGIS="undef" SIGNAME="demodulator_correlator_input_r_TLAST">
           <CONNECTIONS>
             <CONNECTION INSTANCE="demodulator_dma" PORT="m_axis_mm2s_tlast"/>
           </CONNECTIONS>
         </PORT>
-        <PORT DIR="I" LEFT="0" NAME="instream_TID" RIGHT="0" SIGIS="undef"/>
-        <PORT DIR="O" NAME="outstream_TVALID" SIGIS="undef" SIGNAME="demodulator_correlator_outstream_TVALID">
+        <PORT DIR="I" LEFT="0" NAME="input_r_TID" RIGHT="0" SIGIS="undef"/>
+        <PORT DIR="O" NAME="output_r_TVALID" SIGIS="undef" SIGNAME="demodulator_correlator_output_r_TVALID">
           <CONNECTIONS>
             <CONNECTION INSTANCE="demodulator_dma" PORT="s_axis_s2mm_tvalid"/>
           </CONNECTIONS>
         </PORT>
-        <PORT DIR="I" NAME="outstream_TREADY" SIGIS="undef" SIGNAME="demodulator_correlator_outstream_TREADY">
+        <PORT DIR="I" NAME="output_r_TREADY" SIGIS="undef" SIGNAME="demodulator_correlator_output_r_TREADY">
           <CONNECTIONS>
             <CONNECTION INSTANCE="demodulator_dma" PORT="s_axis_s2mm_tready"/>
           </CONNECTIONS>
         </PORT>
-        <PORT DIR="O" LEFT="7" NAME="outstream_TDATA" RIGHT="0" SIGIS="undef" SIGNAME="demodulator_correlator_outstream_TDATA">
+        <PORT DIR="O" LEFT="7" NAME="output_r_TDATA" RIGHT="0" SIGIS="undef" SIGNAME="demodulator_correlator_output_r_TDATA">
           <CONNECTIONS>
             <CONNECTION INSTANCE="demodulator_dma" PORT="s_axis_s2mm_tdata"/>
           </CONNECTIONS>
         </PORT>
-        <PORT DIR="O" LEFT="0" NAME="outstream_TDEST" RIGHT="0" SIGIS="undef"/>
-        <PORT DIR="O" LEFT="0" NAME="outstream_TKEEP" RIGHT="0" SIGIS="undef" SIGNAME="demodulator_correlator_outstream_TKEEP">
+        <PORT DIR="O" LEFT="0" NAME="output_r_TDEST" RIGHT="0" SIGIS="undef"/>
+        <PORT DIR="O" LEFT="0" NAME="output_r_TKEEP" RIGHT="0" SIGIS="undef" SIGNAME="demodulator_correlator_output_r_TKEEP">
           <CONNECTIONS>
             <CONNECTION INSTANCE="demodulator_dma" PORT="s_axis_s2mm_tkeep"/>
           </CONNECTIONS>
         </PORT>
-        <PORT DIR="O" LEFT="0" NAME="outstream_TSTRB" RIGHT="0" SIGIS="undef"/>
-        <PORT DIR="O" LEFT="0" NAME="outstream_TUSER" RIGHT="0" SIGIS="undef"/>
-        <PORT DIR="O" LEFT="0" NAME="outstream_TLAST" RIGHT="0" SIGIS="undef" SIGNAME="demodulator_correlator_outstream_TLAST">
+        <PORT DIR="O" LEFT="0" NAME="output_r_TSTRB" RIGHT="0" SIGIS="undef"/>
+        <PORT DIR="O" LEFT="0" NAME="output_r_TUSER" RIGHT="0" SIGIS="undef"/>
+        <PORT DIR="O" LEFT="0" NAME="output_r_TLAST" RIGHT="0" SIGIS="undef" SIGNAME="demodulator_correlator_output_r_TLAST">
           <CONNECTIONS>
             <CONNECTION INSTANCE="demodulator_dma" PORT="s_axis_s2mm_tlast"/>
           </CONNECTIONS>
         </PORT>
-        <PORT DIR="O" LEFT="0" NAME="outstream_TID" RIGHT="0" SIGIS="undef"/>
+        <PORT DIR="O" LEFT="0" NAME="output_r_TID" RIGHT="0" SIGIS="undef"/>
       </PORTS>
       <BUSINTERFACES>
-        <BUSINTERFACE BUSNAME="__NOC__" NAME="ap_ctrl" TYPE="TARGET" VLNV="xilinx.com:interface:acc_handshake:1.0">
-          <PARAMETER NAME="LAYERED_METADATA" VALUE="xilinx.com:interface:datatypes:1.0 {start {datatype {name {attribs {resolve_type immediate dependency {} format string minimum {} maximum {}} value {}} bitwidth {attribs {resolve_type immediate dependency {} format long minimum {} maximum {}} value 1} bitoffset {attribs {resolve_type immediate dependency {} format long minimum {} maximum {}} value 0}}} done {datatype {name {attribs {resolve_type immediate dependency {} format string minimum {} maximum {}} value {}} bitwidth {attribs {resolve_type immediate dependency {} format long minimum {} maximum {}} value 1} bitoffset {attribs {resolve_type immediate dependency {} format long minimum {} maximum {}} value 0}}} idle {datatype {name {attribs {resolve_type immediate dependency {} format string minimum {} maximum {}} value {}} bitwidth {attribs {resolve_type immediate dependency {} format long minimum {} maximum {}} value 1} bitoffset {attribs {resolve_type immediate dependency {} format long minimum {} maximum {}} value 0}}} ready {datatype {name {attribs {resolve_type immediate dependency {} format string minimum {} maximum {}} value {}} bitwidth {attribs {resolve_type immediate dependency {} format long minimum {} maximum {}} value 1} bitoffset {attribs {resolve_type immediate dependency {} format long minimum {} maximum {}} value 0}}}}"/>
-          <PORTMAPS>
-            <PORTMAP LOGICAL="start" PHYSICAL="ap_start"/>
-            <PORTMAP LOGICAL="done" PHYSICAL="ap_done"/>
-            <PORTMAP LOGICAL="idle" PHYSICAL="ap_idle"/>
-            <PORTMAP LOGICAL="ready" PHYSICAL="ap_ready"/>
-          </PORTMAPS>
-        </BUSINTERFACE>
-        <BUSINTERFACE BUSNAME="demodulator_dma_M_AXIS_MM2S" NAME="instream" TYPE="TARGET" VLNV="xilinx.com:interface:axis:1.0">
+        <BUSINTERFACE BUSNAME="demodulator_dma_M_AXIS_MM2S" NAME="input_r" TYPE="TARGET" VLNV="xilinx.com:interface:axis:1.0">
           <PARAMETER NAME="TDATA_NUM_BYTES" VALUE="2"/>
           <PARAMETER NAME="TDEST_WIDTH" VALUE="1"/>
           <PARAMETER NAME="TID_WIDTH" VALUE="1"/>
@@ -786,18 +769,18 @@
           <PARAMETER NAME="CLK_DOMAIN" VALUE="design_1_processing_system7_0_0_FCLK_CLK0"/>
           <PARAMETER NAME="INSERT_VIP" VALUE="0"/>
           <PORTMAPS>
-            <PORTMAP LOGICAL="TVALID" PHYSICAL="instream_TVALID"/>
-            <PORTMAP LOGICAL="TREADY" PHYSICAL="instream_TREADY"/>
-            <PORTMAP LOGICAL="TDATA" PHYSICAL="instream_TDATA"/>
-            <PORTMAP LOGICAL="TDEST" PHYSICAL="instream_TDEST"/>
-            <PORTMAP LOGICAL="TKEEP" PHYSICAL="instream_TKEEP"/>
-            <PORTMAP LOGICAL="TSTRB" PHYSICAL="instream_TSTRB"/>
-            <PORTMAP LOGICAL="TUSER" PHYSICAL="instream_TUSER"/>
-            <PORTMAP LOGICAL="TLAST" PHYSICAL="instream_TLAST"/>
-            <PORTMAP LOGICAL="TID" PHYSICAL="instream_TID"/>
+            <PORTMAP LOGICAL="TVALID" PHYSICAL="input_r_TVALID"/>
+            <PORTMAP LOGICAL="TREADY" PHYSICAL="input_r_TREADY"/>
+            <PORTMAP LOGICAL="TDATA" PHYSICAL="input_r_TDATA"/>
+            <PORTMAP LOGICAL="TDEST" PHYSICAL="input_r_TDEST"/>
+            <PORTMAP LOGICAL="TKEEP" PHYSICAL="input_r_TKEEP"/>
+            <PORTMAP LOGICAL="TSTRB" PHYSICAL="input_r_TSTRB"/>
+            <PORTMAP LOGICAL="TUSER" PHYSICAL="input_r_TUSER"/>
+            <PORTMAP LOGICAL="TLAST" PHYSICAL="input_r_TLAST"/>
+            <PORTMAP LOGICAL="TID" PHYSICAL="input_r_TID"/>
           </PORTMAPS>
         </BUSINTERFACE>
-        <BUSINTERFACE BUSNAME="demodulator_correlator_outstream" NAME="outstream" TYPE="INITIATOR" VLNV="xilinx.com:interface:axis:1.0">
+        <BUSINTERFACE BUSNAME="demodulator_correlator_output_r" NAME="output_r" TYPE="INITIATOR" VLNV="xilinx.com:interface:axis:1.0">
           <PARAMETER NAME="TDATA_NUM_BYTES" VALUE="1"/>
           <PARAMETER NAME="TDEST_WIDTH" VALUE="1"/>
           <PARAMETER NAME="TID_WIDTH" VALUE="1"/>
@@ -812,15 +795,15 @@
           <PARAMETER NAME="CLK_DOMAIN" VALUE="design_1_processing_system7_0_0_FCLK_CLK0"/>
           <PARAMETER NAME="INSERT_VIP" VALUE="0"/>
           <PORTMAPS>
-            <PORTMAP LOGICAL="TVALID" PHYSICAL="outstream_TVALID"/>
-            <PORTMAP LOGICAL="TREADY" PHYSICAL="outstream_TREADY"/>
-            <PORTMAP LOGICAL="TDATA" PHYSICAL="outstream_TDATA"/>
-            <PORTMAP LOGICAL="TDEST" PHYSICAL="outstream_TDEST"/>
-            <PORTMAP LOGICAL="TKEEP" PHYSICAL="outstream_TKEEP"/>
-            <PORTMAP LOGICAL="TSTRB" PHYSICAL="outstream_TSTRB"/>
-            <PORTMAP LOGICAL="TUSER" PHYSICAL="outstream_TUSER"/>
-            <PORTMAP LOGICAL="TLAST" PHYSICAL="outstream_TLAST"/>
-            <PORTMAP LOGICAL="TID" PHYSICAL="outstream_TID"/>
+            <PORTMAP LOGICAL="TVALID" PHYSICAL="output_r_TVALID"/>
+            <PORTMAP LOGICAL="TREADY" PHYSICAL="output_r_TREADY"/>
+            <PORTMAP LOGICAL="TDATA" PHYSICAL="output_r_TDATA"/>
+            <PORTMAP LOGICAL="TDEST" PHYSICAL="output_r_TDEST"/>
+            <PORTMAP LOGICAL="TKEEP" PHYSICAL="output_r_TKEEP"/>
+            <PORTMAP LOGICAL="TSTRB" PHYSICAL="output_r_TSTRB"/>
+            <PORTMAP LOGICAL="TUSER" PHYSICAL="output_r_TUSER"/>
+            <PORTMAP LOGICAL="TLAST" PHYSICAL="output_r_TLAST"/>
+            <PORTMAP LOGICAL="TID" PHYSICAL="output_r_TID"/>
           </PORTMAPS>
         </BUSINTERFACE>
       </BUSINTERFACES>
@@ -1874,34 +1857,30 @@
             <CONNECTION INSTANCE="axi_smc" PORT="S00_AXI_rready"/>
           </CONNECTIONS>
         </PORT>
-        <PORT DIR="O" NAME="mm2s_prmry_reset_out_n" SIGIS="rst" SIGNAME="demodulator_dma_mm2s_prmry_reset_out_n">
+        <PORT DIR="O" NAME="mm2s_prmry_reset_out_n" SIGIS="rst"/>
+        <PORT DIR="O" LEFT="15" NAME="m_axis_mm2s_tdata" RIGHT="0" SIGIS="undef" SIGNAME="demodulator_correlator_input_r_TDATA">
           <CONNECTIONS>
-            <CONNECTION INSTANCE="demodulator_correlator" PORT="ap_start"/>
+            <CONNECTION INSTANCE="demodulator_correlator" PORT="input_r_TDATA"/>
           </CONNECTIONS>
         </PORT>
-        <PORT DIR="O" LEFT="15" NAME="m_axis_mm2s_tdata" RIGHT="0" SIGIS="undef" SIGNAME="demodulator_correlator_instream_TDATA">
+        <PORT DIR="O" LEFT="1" NAME="m_axis_mm2s_tkeep" RIGHT="0" SIGIS="undef" SIGNAME="demodulator_correlator_input_r_TKEEP">
           <CONNECTIONS>
-            <CONNECTION INSTANCE="demodulator_correlator" PORT="instream_TDATA"/>
+            <CONNECTION INSTANCE="demodulator_correlator" PORT="input_r_TKEEP"/>
           </CONNECTIONS>
         </PORT>
-        <PORT DIR="O" LEFT="1" NAME="m_axis_mm2s_tkeep" RIGHT="0" SIGIS="undef" SIGNAME="demodulator_correlator_instream_TKEEP">
+        <PORT DIR="O" NAME="m_axis_mm2s_tvalid" SIGIS="undef" SIGNAME="demodulator_correlator_input_r_TVALID">
           <CONNECTIONS>
-            <CONNECTION INSTANCE="demodulator_correlator" PORT="instream_TKEEP"/>
+            <CONNECTION INSTANCE="demodulator_correlator" PORT="input_r_TVALID"/>
           </CONNECTIONS>
         </PORT>
-        <PORT DIR="O" NAME="m_axis_mm2s_tvalid" SIGIS="undef" SIGNAME="demodulator_correlator_instream_TVALID">
+        <PORT DIR="I" NAME="m_axis_mm2s_tready" SIGIS="undef" SIGNAME="demodulator_correlator_input_r_TREADY">
           <CONNECTIONS>
-            <CONNECTION INSTANCE="demodulator_correlator" PORT="instream_TVALID"/>
+            <CONNECTION INSTANCE="demodulator_correlator" PORT="input_r_TREADY"/>
           </CONNECTIONS>
         </PORT>
-        <PORT DIR="I" NAME="m_axis_mm2s_tready" SIGIS="undef" SIGNAME="demodulator_correlator_instream_TREADY">
+        <PORT DIR="O" NAME="m_axis_mm2s_tlast" SIGIS="undef" SIGNAME="demodulator_correlator_input_r_TLAST">
           <CONNECTIONS>
-            <CONNECTION INSTANCE="demodulator_correlator" PORT="instream_TREADY"/>
-          </CONNECTIONS>
-        </PORT>
-        <PORT DIR="O" NAME="m_axis_mm2s_tlast" SIGIS="undef" SIGNAME="demodulator_correlator_instream_TLAST">
-          <CONNECTIONS>
-            <CONNECTION INSTANCE="demodulator_correlator" PORT="instream_TLAST"/>
+            <CONNECTION INSTANCE="demodulator_correlator" PORT="input_r_TLAST"/>
           </CONNECTIONS>
         </PORT>
         <PORT DIR="O" LEFT="31" NAME="m_axi_s2mm_awaddr" RIGHT="0" SIGIS="undef" SIGNAME="axi_smc_S01_AXI_awaddr">
@@ -1985,29 +1964,29 @@
           </CONNECTIONS>
         </PORT>
         <PORT DIR="O" NAME="s2mm_prmry_reset_out_n" SIGIS="rst"/>
-        <PORT DIR="I" LEFT="7" NAME="s_axis_s2mm_tdata" RIGHT="0" SIGIS="undef" SIGNAME="demodulator_correlator_outstream_TDATA">
+        <PORT DIR="I" LEFT="7" NAME="s_axis_s2mm_tdata" RIGHT="0" SIGIS="undef" SIGNAME="demodulator_correlator_output_r_TDATA">
           <CONNECTIONS>
-            <CONNECTION INSTANCE="demodulator_correlator" PORT="outstream_TDATA"/>
+            <CONNECTION INSTANCE="demodulator_correlator" PORT="output_r_TDATA"/>
           </CONNECTIONS>
         </PORT>
-        <PORT DIR="I" LEFT="0" NAME="s_axis_s2mm_tkeep" RIGHT="0" SIGIS="undef" SIGNAME="demodulator_correlator_outstream_TKEEP">
+        <PORT DIR="I" LEFT="0" NAME="s_axis_s2mm_tkeep" RIGHT="0" SIGIS="undef" SIGNAME="demodulator_correlator_output_r_TKEEP">
           <CONNECTIONS>
-            <CONNECTION INSTANCE="demodulator_correlator" PORT="outstream_TKEEP"/>
+            <CONNECTION INSTANCE="demodulator_correlator" PORT="output_r_TKEEP"/>
           </CONNECTIONS>
         </PORT>
-        <PORT DIR="I" NAME="s_axis_s2mm_tvalid" SIGIS="undef" SIGNAME="demodulator_correlator_outstream_TVALID">
+        <PORT DIR="I" NAME="s_axis_s2mm_tvalid" SIGIS="undef" SIGNAME="demodulator_correlator_output_r_TVALID">
           <CONNECTIONS>
-            <CONNECTION INSTANCE="demodulator_correlator" PORT="outstream_TVALID"/>
+            <CONNECTION INSTANCE="demodulator_correlator" PORT="output_r_TVALID"/>
           </CONNECTIONS>
         </PORT>
-        <PORT DIR="O" NAME="s_axis_s2mm_tready" SIGIS="undef" SIGNAME="demodulator_correlator_outstream_TREADY">
+        <PORT DIR="O" NAME="s_axis_s2mm_tready" SIGIS="undef" SIGNAME="demodulator_correlator_output_r_TREADY">
           <CONNECTIONS>
-            <CONNECTION INSTANCE="demodulator_correlator" PORT="outstream_TREADY"/>
+            <CONNECTION INSTANCE="demodulator_correlator" PORT="output_r_TREADY"/>
           </CONNECTIONS>
         </PORT>
-        <PORT DIR="I" NAME="s_axis_s2mm_tlast" SIGIS="undef" SIGNAME="demodulator_correlator_outstream_TLAST">
+        <PORT DIR="I" NAME="s_axis_s2mm_tlast" SIGIS="undef" SIGNAME="demodulator_correlator_output_r_TLAST">
           <CONNECTIONS>
-            <CONNECTION INSTANCE="demodulator_correlator" PORT="outstream_TLAST"/>
+            <CONNECTION INSTANCE="demodulator_correlator" PORT="output_r_TLAST"/>
           </CONNECTIONS>
         </PORT>
         <PORT DIR="O" NAME="mm2s_introut" SENSITIVITY="LEVEL_HIGH" SIGIS="INTERRUPT"/>
@@ -2187,7 +2166,7 @@
             <PORTMAP LOGICAL="TVALID" PHYSICAL="m_axis_mm2s_tvalid"/>
           </PORTMAPS>
         </BUSINTERFACE>
-        <BUSINTERFACE BUSNAME="demodulator_correlator_outstream" NAME="S_AXIS_S2MM" TYPE="TARGET" VLNV="xilinx.com:interface:axis:1.0">
+        <BUSINTERFACE BUSNAME="demodulator_correlator_output_r" NAME="S_AXIS_S2MM" TYPE="TARGET" VLNV="xilinx.com:interface:axis:1.0">
           <PARAMETER NAME="TDATA_NUM_BYTES" VALUE="1"/>
           <PARAMETER NAME="TDEST_WIDTH" VALUE="0"/>
           <PARAMETER NAME="TID_WIDTH" VALUE="0"/>

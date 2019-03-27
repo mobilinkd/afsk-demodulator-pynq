@@ -127,7 +127,7 @@ if { $bCheckIPs == 1 } {
 xilinx.com:ip:smartconnect:1.0\
 xilinx.com:ip:processing_system7:5.5\
 xilinx.com:ip:proc_sys_reset:5.0\
-Mobilinkd:afsk:demodulate3:1.0\
+xilinx.com:hls:demodulate3:1.0\
 xilinx.com:ip:axi_dma:7.1\
 "
 
@@ -202,7 +202,7 @@ proc create_hier_cell_demodulator { parentCell nameHier } {
   create_bd_pin -dir I -type clk m_axi_mm2s_aclk
 
   # Create instance: correlator, and set properties
-  set correlator [ create_bd_cell -type ip -vlnv Mobilinkd:afsk:demodulate3:1.0 correlator ]
+  set correlator [ create_bd_cell -type ip -vlnv xilinx.com:hls:demodulate3:1.0 correlator ]
 
   # Create instance: dma, and set properties
   set dma [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_dma:7.1 dma ]
@@ -216,12 +216,11 @@ proc create_hier_cell_demodulator { parentCell nameHier } {
   # Create interface connections
   connect_bd_intf_net -intf_net axi_dma_0_M_AXI_MM2S [get_bd_intf_pins M_AXI_MM2S] [get_bd_intf_pins dma/M_AXI_MM2S]
   connect_bd_intf_net -intf_net axi_dma_0_M_AXI_S2MM [get_bd_intf_pins M_AXI_S2MM] [get_bd_intf_pins dma/M_AXI_S2MM]
-  connect_bd_intf_net -intf_net demodulate3_0_outstream [get_bd_intf_pins correlator/outstream] [get_bd_intf_pins dma/S_AXIS_S2MM]
-  connect_bd_intf_net -intf_net dma_M_AXIS_MM2S [get_bd_intf_pins correlator/instream] [get_bd_intf_pins dma/M_AXIS_MM2S]
+  connect_bd_intf_net -intf_net demodulate3_0_output_r [get_bd_intf_pins correlator/output_r] [get_bd_intf_pins dma/S_AXIS_S2MM]
+  connect_bd_intf_net -intf_net dma_M_AXIS_MM2S [get_bd_intf_pins correlator/input_r] [get_bd_intf_pins dma/M_AXIS_MM2S]
   connect_bd_intf_net -intf_net ps7_0_axi_periph_M00_AXI [get_bd_intf_pins S_AXI_LITE] [get_bd_intf_pins dma/S_AXI_LITE]
 
   # Create port connections
-  connect_bd_net -net dma_mm2s_prmry_reset_out_n [get_bd_pins correlator/ap_start] [get_bd_pins dma/mm2s_prmry_reset_out_n]
   connect_bd_net -net processing_system7_0_FCLK_CLK0 [get_bd_pins m_axi_mm2s_aclk] [get_bd_pins correlator/ap_clk] [get_bd_pins dma/m_axi_mm2s_aclk] [get_bd_pins dma/m_axi_s2mm_aclk] [get_bd_pins dma/s_axi_lite_aclk]
   connect_bd_net -net rst_ps7_0_100M_peripheral_aresetn [get_bd_pins axi_resetn] [get_bd_pins correlator/ap_rst_n] [get_bd_pins dma/axi_resetn]
 
