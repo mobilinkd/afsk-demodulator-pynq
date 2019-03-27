@@ -217,7 +217,7 @@ proc create_hier_cell_demodulator { parentCell nameHier } {
   connect_bd_intf_net -intf_net axi_dma_0_M_AXI_MM2S [get_bd_intf_pins M_AXI_MM2S] [get_bd_intf_pins dma/M_AXI_MM2S]
   connect_bd_intf_net -intf_net axi_dma_0_M_AXI_S2MM [get_bd_intf_pins M_AXI_S2MM] [get_bd_intf_pins dma/M_AXI_S2MM]
   connect_bd_intf_net -intf_net demodulate3_0_outstream [get_bd_intf_pins correlator/outstream] [get_bd_intf_pins dma/S_AXIS_S2MM]
-  connect_bd_intf_net -intf_net dma_M_AXIS_MM2S [get_bd_intf_pins correlator/instream_V] [get_bd_intf_pins dma/M_AXIS_MM2S]
+  connect_bd_intf_net -intf_net dma_M_AXIS_MM2S [get_bd_intf_pins correlator/instream] [get_bd_intf_pins dma/M_AXIS_MM2S]
   connect_bd_intf_net -intf_net ps7_0_axi_periph_M00_AXI [get_bd_intf_pins S_AXI_LITE] [get_bd_intf_pins dma/S_AXI_LITE]
 
   # Create port connections
