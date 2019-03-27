@@ -43,9 +43,11 @@ int main()
     instream_type input;
     outstream_type output;
 
+    idata_type tmp_in;
     for (int i = 0; i != sizeof(audio_data)/2; ++i)
     {
-        input << audio_data[i];
+    	tmp_in.data = audio_data[i];
+        input << tmp_in;
     }
 
     demodulate3(input, output);

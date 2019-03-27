@@ -42,14 +42,18 @@ void demodulate3(instream_type& instream, outstream_type& outstream)
 #pragma HLS INTERFACE axis port=instream
 #pragma HLS INTERFACE axis port=outstream
 #pragma HLS interface ap_ctrl_hs port=return
+#pragma HLS stream variable=instream depth=26400
+#pragma HLS stream variable=outstream depth=26400
 
-	int16_t input, filtered;
-	bool comp, delayed;
+
+	idata_type input;
 	odata_type output;
+	int16_t filtered;
+	bool comp, delayed;
 
     demod_loop: while (!instream.empty()) {
     	instream >> input;
-    	filtered = fir_filter(input, bpf_coeffs);
+    	filtered = fir_filter(input.data, bpf_coeffs);
     	comp = filtered >= 0;
     	delayed = delay_line.shift(comp);
     	output.data = comp ^ delayed;

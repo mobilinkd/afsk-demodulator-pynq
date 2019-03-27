@@ -4,7 +4,8 @@
 
 #define BPF_COEFF_LEN 141
 
-typedef hls::stream<int16_t> instream_type;
+typedef ap_axis<16,1,1,1> idata_type;
+typedef hls::stream<idata_type> instream_type;
 typedef ap_axis<1,1,1,1> odata_type;
 typedef hls::stream<odata_type> outstream_type;
 
