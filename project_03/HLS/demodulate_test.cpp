@@ -40,25 +40,20 @@ const bool corr_data[] = {
 
 int main()
 {
-    instream_type input;
-    outstream_type output;
 
     idata_type tmp_in;
-    for (int i = 0; i != sizeof(audio_data)/2; ++i)
-    {
-    	tmp_in.data = audio_data[i];
-        input << tmp_in;
-    }
-
-    demodulate3(input, output);
+	odata_type tmp_out;
 
     bool failed = false;
     const bool* c = corr_data;
-	odata_type tmp;
-    while (!output.empty())
+
+    const int last = sizeof(audio_data)/2 - 1;
+    for (int i = 0; i != sizeof(audio_data)/2; ++i)
     {
-        output >> tmp;
-        bool t = static_cast<bool>(tmp.data);
+    	tmp_in.data = audio_data[i];
+    	if (last == i) tmp_in.last = true;
+    	demodulate3(tmp_in, tmp_out);
+    	bool t = static_cast<bool>(tmp_out.data);
         if (*c != t) {
 			printf("got %d, expected %d\n", t, *c);
 			failed = true;
@@ -66,7 +61,7 @@ int main()
         ++c;
     }
 
-    if (!tmp.last) {
+    if (!tmp_out.last) {
     	printf("TLAST not set");
     	failed = true;
     }

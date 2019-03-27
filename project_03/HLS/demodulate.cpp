@@ -37,27 +37,23 @@ InOut fir_filter(InOut x, Filter (&coeff)[N])
 
 ap_shift_reg<bool, 12> delay_line;
 
-void demodulate3(instream_type& instream, outstream_type& outstream)
+void demodulate3(idata_type& input, odata_type& output)
 {
-#pragma HLS INTERFACE axis port=instream
-#pragma HLS INTERFACE axis port=outstream
-#pragma HLS interface ap_ctrl_hs port=return
-#pragma HLS stream variable=instream depth=26400
-#pragma HLS stream variable=outstream depth=26400
+#pragma HLS INTERFACE axis port=input
+#pragma HLS INTERFACE axis port=output
+#pragma HLS interface ap_ctrl_none port=return
 
+	ap_int<16> filtered;
+	ap_int<1> comp, delayed;
 
-	idata_type input;
-	odata_type output;
-	int16_t filtered;
-	bool comp, delayed;
-
-    demod_loop: while (!instream.empty()) {
-    	instream >> input;
-    	filtered = fir_filter(input.data, bpf_coeffs);
-    	comp = filtered >= 0;
-    	delayed = delay_line.shift(comp);
-    	output.data = comp ^ delayed;
-    	output.last = instream.empty();
-    	outstream << output;
-    }
+	filtered = fir_filter(input.data, bpf_coeffs);
+	comp = filtered >= 0 ? 1 : 0;
+	delayed = delay_line.shift(comp);
+	output.data = comp ^ delayed;
+    output.dest = input.dest;
+    output.id = input.id;
+    output.keep = input.keep;
+    output.last = input.last;
+    output.strb = input.strb;
+    output.user = input.user;
 }

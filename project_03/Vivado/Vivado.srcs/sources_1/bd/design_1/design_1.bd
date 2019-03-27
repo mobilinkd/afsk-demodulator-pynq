@@ -2050,28 +2050,22 @@
           }
         },
         "interface_nets": {
-          "s00_couplers_to_xbar": {
-            "interface_ports": [
-              "s00_couplers/M_AXI",
-              "xbar/S00_AXI"
-            ]
-          },
           "xbar_to_m00_couplers": {
             "interface_ports": [
               "xbar/M00_AXI",
               "m00_couplers/S_AXI"
             ]
           },
-          "ps7_0_axi_periph_to_s00_couplers": {
-            "interface_ports": [
-              "S00_AXI",
-              "s00_couplers/S_AXI"
-            ]
-          },
           "m01_couplers_to_ps7_0_axi_periph": {
             "interface_ports": [
               "M01_AXI",
               "m01_couplers/M_AXI"
+            ]
+          },
+          "ps7_0_axi_periph_to_s00_couplers": {
+            "interface_ports": [
+              "S00_AXI",
+              "s00_couplers/S_AXI"
             ]
           },
           "m00_couplers_to_ps7_0_axi_periph": {
@@ -2084,6 +2078,12 @@
             "interface_ports": [
               "xbar/M01_AXI",
               "m01_couplers/S_AXI"
+            ]
+          },
+          "s00_couplers_to_xbar": {
+            "interface_ports": [
+              "s00_couplers/M_AXI",
+              "xbar/S00_AXI"
             ]
           }
         },
@@ -2141,8 +2141,8 @@
         },
         "components": {
           "correlator": {
-            "vlnv": "Mobilinkd:afsk:demodulate3:1.0",
-            "xci_name": "design_1_demodulate3_0_0"
+            "vlnv": "xilinx.com:hls:demodulate3:1.0",
+            "xci_name": "design_1_demodulate3_0_1"
           },
           "dma": {
             "vlnv": "xilinx.com:ip:axi_dma:7.1",
@@ -2167,16 +2167,16 @@
               "dma/M_AXI_S2MM"
             ]
           },
-          "dma_M_AXIS_MM2S": {
+          "demodulate3_0_output_r": {
             "interface_ports": [
-              "correlator/instream",
-              "dma/M_AXIS_MM2S"
+              "correlator/output_r",
+              "dma/S_AXIS_S2MM"
             ]
           },
-          "demodulate3_0_outstream": {
+          "ps7_0_axi_periph_M00_AXI": {
             "interface_ports": [
-              "correlator/outstream",
-              "dma/S_AXIS_S2MM"
+              "S_AXI_LITE",
+              "dma/S_AXI_LITE"
             ]
           },
           "axi_dma_0_M_AXI_MM2S": {
@@ -2185,20 +2185,14 @@
               "dma/M_AXI_MM2S"
             ]
           },
-          "ps7_0_axi_periph_M00_AXI": {
+          "dma_M_AXIS_MM2S": {
             "interface_ports": [
-              "S_AXI_LITE",
-              "dma/S_AXI_LITE"
+              "correlator/input_r",
+              "dma/M_AXIS_MM2S"
             ]
           }
         },
         "nets": {
-          "dma_mm2s_prmry_reset_out_n": {
-            "ports": [
-              "dma/mm2s_prmry_reset_out_n",
-              "correlator/ap_start"
-            ]
-          },
           "processing_system7_0_FCLK_CLK0": {
             "ports": [
               "m_axi_mm2s_aclk",
