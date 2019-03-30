@@ -1,4 +1,6 @@
 #include "demodulate.hpp"
+#include "digital_pll.hpp"
+
 #include "ap_shift_reg.h"
 
 const ap_int<13> bpf_coeffs[] =
@@ -48,15 +50,16 @@ InOut fir_filter(InOut x, Filter (&coeff)[N])
 }
 
 ap_shift_reg<bool, 12> delay_line;
+DigitalPLL<> dpll(26400, 1200);
 
-void demodulate4(idata_type& input, odata_type& output)
+void demodulate5(idata_type& input, odata_type& output)
 {
 #pragma HLS INTERFACE axis port=input
 #pragma HLS INTERFACE axis port=output
 #pragma HLS interface ap_ctrl_none port=return
 
 	ap_int<16> bpfiltered, lpfiltered;
-	ap_int<1> comp, delayed;
+	ap_int<1> comp, delayed, comp2;
 	ap_int<2> corr;
 
 	bpfiltered = fir_filter(input.data, bpf_coeffs);
@@ -66,7 +69,12 @@ void demodulate4(idata_type& input, odata_type& output)
 	corr <<= 1;
 	corr -= 1;
 	lpfiltered = fir_filter(corr, lpf_coeffs);
-	output.data = lpfiltered >= 0 ? 1 : 0;
+	comp2 = lpfiltered >= 0 ? 1 : 0;
+	typename DigitalPLL<>::result_type result = dpll(comp2 != 0);
+
+	ap_int<3> tmp = (std::get<0>(result) << 2) |
+			(std::get<1>(result) << 1) | std::get<2>(result);
+	output.data = tmp;
     output.dest = input.dest;
     output.id = input.id;
     output.keep = input.keep;
