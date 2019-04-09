@@ -11,9 +11,10 @@ struct crc16_ccitt {
 
 	crc16_ccitt()
 	{
+#pragma HLS RESOURCE variable=crc core=FIFO_SRL
 	}
 
-	void operator()(ap_uint<1> bit) {
+	void compute(ap_uint<1> bit) {
 #pragma HLS PIPELINE
 		ap_uint<1> tmp = crc[15] ^ bit;
 		crc <<= 1;

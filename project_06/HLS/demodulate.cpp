@@ -3,8 +3,6 @@
 #include "hdlc.hpp"
 #include "nrzi.hpp"
 
-#include "ap_shift_reg.h"
-
 #include <iostream>
 
 const ap_int<13> bpf_coeffs[] =
@@ -42,7 +40,7 @@ InOut fir_filter(InOut x, Filter (&coeff)[N])
     ap_int<31> accum = 0;
     filter_loop: for (int i = N-1 ; i != 0; i--)
     {
-#pragma HLS UNROLL factor=20
+#pragma HLS UNROLL factor=5
         shift_reg[i] = shift_reg[i-1];
         accum += shift_reg[i] * coeff[i];
     }
@@ -52,16 +50,10 @@ InOut fir_filter(InOut x, Filter (&coeff)[N])
     return static_cast<InOut>(accum >> 15);
 }
 
-ap_shift_reg<bool, 12> delay_line;
-DigitalPLL<> dpll(26400.0, 1200.0);
 
-ap_uint<8> buffer[4096];
-hdlc_decoder<sizeof(buffer)> hdlc(buffer, false);
-nrzi afsk_nrzi;
-
-/*
-void write_byte(ostream_type& out2, ap_uint<8> data, ap_uint<1> last)
+void write_byte(ostream_type& out, ap_uint<8> data, ap_uint<1> last)
 {
+#pragma HLS INLINE off
 	odata_type output;
 
 	output.data = data;
@@ -71,19 +63,25 @@ void write_byte(ostream_type& out2, ap_uint<8> data, ap_uint<1> last)
 	output.last = last;
 	output.strb = 1;
 	output.user = 0;
-	out2 << output;
+	out << output;
 }
-*/
+
+DigitalPLL<> dpll(26400.0, 1200.0);
 
 void demod(ap_int<16> data, bool& bit, bool& sample_out, bool& locked_out)
 {
+	static ap_uint<12> delay_line{0};
+#pragma HLS RESOURCE variable=delay_line core=FIFO_SRL
+
 	ap_int<16> bpfiltered = fir_filter(data, bpf_coeffs);
 	ap_uint<1>comp = bpfiltered[15] == 0;
-	ap_uint<1>delayed = delay_line.shift(comp);
+	ap_uint<1>delayed = delay_line[11];
+	delay_line <<= 1;
+	delay_line[0] = comp;
 	ap_uint<1> corr = comp ^ delayed;
 	ap_int<2> corr_norm =  corr ? 1 : -1;
 	ap_int<16> lpfiltered = fir_filter(corr_norm, lpf_coeffs);
-	bit = !lpfiltered[15];
+	bit = ~lpfiltered[15];
 	dpll.pll(bit, sample_out, locked_out);
 }
 
@@ -95,9 +93,11 @@ void demodulate6(istream_type& in, ostream_type& out, lock_type& lock, done_type
 #pragma HLS INTERFACE s_axilite port=done
 
 	static bool undone = false;
+	static ap_uint<8> buffer[4096];
+	static hdlc_decoder<sizeof(buffer)> hdlc(buffer, false);
+	static nrzi afsk_nrzi;
 
 	idata_type input;
-	odata_type output;
 
 #ifndef __SYNTHESIS__
 	std::cout << "input size = " << in.size() << std::endl;
@@ -105,18 +105,8 @@ void demodulate6(istream_type& in, ostream_type& out, lock_type& lock, done_type
 #endif
 
 	is_done: if (done && !undone) {
+		write_byte(out, 0, 1);
 		undone = true;
-		hdlc.start_search();
-		lock = 0;
-		output.data = 0;
-		output.dest = 0;
-		output.id = 0;
-		output.keep = 1;
-		output.last = 1;
-		output.strb = 1;
-		output.user = 0;
-		out << output;
-		// write_byte(out, 0, 1);
 	} else {
 		read_in: while (!in.empty()) {
 			undone = false;
@@ -151,15 +141,7 @@ void demodulate6(istream_type& in, ostream_type& out, lock_type& lock, done_type
 #endif
 					const uint16_t eob = length - 1;
 					write_packet_byte: for (uint16_t i = 0; i != length; ++i) {
-						// write_byte(out, buffer[i], 0);
-						output.data = buffer[i];
-						output.dest = input.dest;
-						output.id = input.id;
-						output.keep = input.keep;
-						output.last = i == eob ? 1 : 0;
-						output.strb = 1;
-						output.user = input.user;
-						out << output;
+						write_byte(out, buffer[i], i == eob ? 1 : 0);
 					}
 				}
 			}

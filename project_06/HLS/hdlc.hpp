@@ -109,7 +109,7 @@ private:
     {
     	ap_uint<8> c = buffer_(7,0);
 		for (int j = 0; j != 8; ++j) {
-			crc_(c[0]);
+			crc_.compute(c[0]);
 			c >>= 1;
 		}
 

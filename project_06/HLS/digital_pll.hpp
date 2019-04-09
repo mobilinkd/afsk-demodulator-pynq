@@ -6,7 +6,7 @@
 
 #include <tuple>
 
-typedef ap_fixed<32,20> fixed_type;
+typedef ap_fixed<32,16> fixed_type;
 
 namespace pll {
 
@@ -65,7 +65,7 @@ struct DigitalPLL {
 
     DigitalPLL(float_type sample_rate, float_type symbol_rate)
     : sample_rate_(sample_rate), symbol_rate_(symbol_rate)
-    , sps_(sample_rate / symbol_rate), limit_(sps_ >> 1)
+    , sps_(sample_rate / symbol_rate), limit_(sps_ / float_type(2.0))
     , lock_(sps_ * float_type(0.025), sps_ * float_type(0.15), 1, 0)
     , last_(false), count_(0), sample_(false)
     , jitter_(0.0), bits_(1)

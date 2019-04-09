@@ -20,7 +20,7 @@ int crc_test()
 		for (int j = 0; j != 8; ++j) {
 			ap_uint<1> bit = (c & 0x1 ? 1 : 0);
 			c >>= 1;
-			crc(bit);
+			crc.compute(bit);
 		}
 	}
 	std::cout << "crc = "<< std::hex << crc.value() << std::endl;
@@ -34,7 +34,7 @@ int crc_test()
 		for (int j = 0; j != 8; ++j) {
 			ap_uint<1> bit = (c & 0x1 ? 1 : 0);
 			c >>= 1;
-			crc(bit);
+			crc.compute(bit);
 		}
 	}
 	failed |= crc.value() != 0xf0b8;
