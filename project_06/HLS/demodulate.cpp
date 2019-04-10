@@ -40,7 +40,7 @@ InOut fir_filter(InOut x, Filter (&coeff)[N])
     ap_int<31> accum = 0;
     filter_loop: for (int i = N-1 ; i != 0; i--)
     {
-#pragma HLS UNROLL factor=5
+#pragma HLS UNROLL factor=20
         shift_reg[i] = shift_reg[i-1];
         accum += shift_reg[i] * coeff[i];
     }
