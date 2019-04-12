@@ -153,7 +153,7 @@ class HDLC:
             if self._have_flag():
                 if self.frame.tell() > 14:
                     # result = self.check_frame()
-                    result = (self.crc(), self.frame.getvalue()[:-2])
+                    result = (self.crc(), self.frame.getvalue())
                 self.start_frame()
 
         else: # too many ones
