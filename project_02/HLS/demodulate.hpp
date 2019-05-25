@@ -1,10 +1,14 @@
+// Copyright 2019 Mobilinkd LLC.
+
+#pragma once
+
 #include <ap_axi_sdata.h>
 #include <hls_stream.h>
-#include <stdint.h>
+#include <ap_int.h>
 
-#define BPF_COEFF_LEN 141
-#define BLOCK_SIZE 264
+#define BPF_COEFF_LEN 129
 
-typedef ap_axis<16,1,1,1> stream_type;
+typedef ap_axis<16,0,0,0> iodata_type;
+typedef hls::stream<iodata_type> stream_type;
 
-void demodulate2(stream_type input[BLOCK_SIZE], stream_type output[BLOCK_SIZE]);
+void demodulate(stream_type& input, stream_type& output);

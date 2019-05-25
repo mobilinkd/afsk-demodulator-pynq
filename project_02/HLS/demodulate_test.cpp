@@ -52,30 +52,43 @@ const int16_t filtered_data[] = {
    754,   268,  -219,  -630,  -897,  -984,  -888,  -644,  -313,    27,   306,   464,
 };
 
+const size_t BLOCK_SIZE = 132;
+
 int main()
 {
-    stream_type input[BLOCK_SIZE];
-    stream_type output[BLOCK_SIZE];
+    stream_type input;
+    stream_type output;
 
-    for (int i = 0; i != BLOCK_SIZE; ++i)
+    iodata_type idata;
+    iodata_type odata;
+
+	bool failed = false;
+
+    for (int j = 0; j != 2; ++j)
     {
-        input[i].data = audio_data[i];
-    }
+		for (int i = 0; i != BLOCK_SIZE; ++i)
+		{
+			idata.data = audio_data[j * BLOCK_SIZE + i];
+			idata.strb = 2;
+			idata.keep = 1;
+			idata.last = i == BLOCK_SIZE - 1;
+		}
 
-    demodulate2(input, output);
+		demodulate(input, output);
 
-    bool failed = false;
-    for (int i = 0; i != BLOCK_SIZE; ++i)
-    {
-    	int d = output[i].data;
-    	int f = filtered_data[i];
-    	int diff = abs(d - f);
-    	if (diff > 2) {
-    		printf("got %d, expected %d, diff = %d\n", d , f, diff);
-    		failed = true;
-    	}
+		size_t i = 0;
+		while (!output.empty())
+		{
+			output >> odata;
+			int d = odata.data;
+			int f = filtered_data[i++];
+			int diff = abs(d - f);
+			if (diff > 2) {
+				printf("got %d, expected %d, diff = %d\n", d , f, diff);
+				failed = true;
+			}
+		}
     }
 
     return failed;
-
 }
