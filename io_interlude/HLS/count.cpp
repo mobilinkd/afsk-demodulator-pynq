@@ -13,17 +13,19 @@ ap_uint<1> count(volatile leds_type& leds_out, int& cntr, btns_type btn_in)
 #pragma HLS PIPELINE
 	leds_out = counter;
 
-	auto btn = button.state(btn_in);
+	auto buttons = button.state(btn_in);
 
-	if (btn[0] != 0) {
+	if (buttons[0] != 0) {
+		// Verify count is not at max.
 		if (!(counter[0] & counter[1] & counter[2] & counter[3])) counter += 1;
 	}
-	if (btn[1] != 0) {
+	if (buttons[1] != 0) {
+		// Verify count is not at min.
 		if (!(counter[0] | counter[1] | counter[2] | counter[3])) counter -= 1;
 	}
-	if (btn[2] != 0) {
+	if (buttons[2] != 0) {
 		counter = 0;
 	}
 	cntr = counter;
-	return static_cast<ap_uint<1>>(btn[3] != 0);
+	return static_cast<ap_uint<1>>(buttons[3] != 0);
 }
