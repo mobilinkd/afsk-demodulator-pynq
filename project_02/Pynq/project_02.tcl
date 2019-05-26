@@ -127,7 +127,7 @@ if { $bCheckIPs == 1 } {
 xilinx.com:ip:smartconnect:1.0\
 xilinx.com:ip:processing_system7:5.5\
 xilinx.com:ip:proc_sys_reset:5.0\
-Mobilinkd:afsk:demodulate2:1.0\
+Mobilinkd:afsk:demodulate:1.0\
 xilinx.com:ip:axi_dma:7.1\
 "
 
@@ -203,21 +203,24 @@ proc create_hier_cell_bpfilter { parentCell nameHier } {
   create_bd_pin -dir I -type clk m_axi_sg_aclk
 
   # Create instance: bpf, and set properties
-  set bpf [ create_bd_cell -type ip -vlnv Mobilinkd:afsk:demodulate2:1.0 bpf ]
+  set bpf [ create_bd_cell -type ip -vlnv Mobilinkd:afsk:demodulate:1.0 bpf ]
 
   # Create instance: bpf_dma, and set properties
   set bpf_dma [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_dma:7.1 bpf_dma ]
   set_property -dict [ list \
    CONFIG.c_include_sg {0} \
    CONFIG.c_m_axis_mm2s_tdata_width {16} \
+   CONFIG.c_mm2s_burst_size {256} \
+   CONFIG.c_s2mm_burst_size {256} \
    CONFIG.c_sg_include_stscntrl_strm {0} \
+   CONFIG.c_sg_length_width {24} \
  ] $bpf_dma
 
   # Create interface connections
-  connect_bd_intf_net -intf_net axi_dma_0_M_AXIS_MM2S [get_bd_intf_pins bpf/input_r] [get_bd_intf_pins bpf_dma/M_AXIS_MM2S]
   connect_bd_intf_net -intf_net axi_dma_0_M_AXI_MM2S [get_bd_intf_pins M_AXI_MM2S] [get_bd_intf_pins bpf_dma/M_AXI_MM2S]
   connect_bd_intf_net -intf_net axi_dma_0_M_AXI_S2MM [get_bd_intf_pins M_AXI_S2MM] [get_bd_intf_pins bpf_dma/M_AXI_S2MM]
-  connect_bd_intf_net -intf_net demodulate2_0_output_r [get_bd_intf_pins bpf/output_r] [get_bd_intf_pins bpf_dma/S_AXIS_S2MM]
+  connect_bd_intf_net -intf_net bpf_dma_M_AXIS_MM2S [get_bd_intf_pins bpf/input_r] [get_bd_intf_pins bpf_dma/M_AXIS_MM2S]
+  connect_bd_intf_net -intf_net demodulate_0_output_r [get_bd_intf_pins bpf/output_r] [get_bd_intf_pins bpf_dma/S_AXIS_S2MM]
   connect_bd_intf_net -intf_net ps7_0_axi_periph_M00_AXI [get_bd_intf_pins S_AXI_LITE] [get_bd_intf_pins bpf_dma/S_AXI_LITE]
 
   # Create port connections
