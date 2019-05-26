@@ -18,8 +18,8 @@
         }
       },
       "bpfilter": {
-        "bpf": "",
-        "bpf_dma": ""
+        "bpf_dma": "",
+        "bpf": ""
       }
     },
     "interface_ports": {
@@ -1845,16 +1845,16 @@
               }
             },
             "interface_nets": {
-              "auto_pc_to_s00_couplers": {
-                "interface_ports": [
-                  "M_AXI",
-                  "auto_pc/M_AXI"
-                ]
-              },
               "s00_couplers_to_auto_pc": {
                 "interface_ports": [
                   "S_AXI",
                   "auto_pc/S_AXI"
+                ]
+              },
+              "auto_pc_to_s00_couplers": {
+                "interface_ports": [
+                  "M_AXI",
+                  "auto_pc/M_AXI"
                 ]
               }
             },
@@ -1945,10 +1945,6 @@
           }
         },
         "components": {
-          "bpf": {
-            "vlnv": "Mobilinkd:afsk:demodulate2:1.0",
-            "xci_name": "design_1_demodulate2_0_0"
-          },
           "bpf_dma": {
             "vlnv": "xilinx.com:ip:axi_dma:7.1",
             "xci_name": "design_1_axi_dma_0_0",
@@ -1958,39 +1954,52 @@
               },
               "c_m_axis_mm2s_tdata_width": {
                 "value": "16"
+              },
+              "c_mm2s_burst_size": {
+                "value": "256"
+              },
+              "c_s2mm_burst_size": {
+                "value": "256"
+              },
+              "c_sg_length_width": {
+                "value": "24"
               }
             }
+          },
+          "bpf": {
+            "vlnv": "Mobilinkd:afsk:demodulate:1.0",
+            "xci_name": "design_1_demodulate_0_0"
           }
         },
         "interface_nets": {
-          "ps7_0_axi_periph_M00_AXI": {
-            "interface_ports": [
-              "S_AXI_LITE",
-              "bpf_dma/S_AXI_LITE"
-            ]
-          },
-          "axi_dma_0_M_AXI_MM2S": {
-            "interface_ports": [
-              "M_AXI_MM2S",
-              "bpf_dma/M_AXI_MM2S"
-            ]
-          },
           "axi_dma_0_M_AXI_S2MM": {
             "interface_ports": [
               "M_AXI_S2MM",
               "bpf_dma/M_AXI_S2MM"
             ]
           },
-          "demodulate2_0_output_r": {
+          "ps7_0_axi_periph_M00_AXI": {
+            "interface_ports": [
+              "S_AXI_LITE",
+              "bpf_dma/S_AXI_LITE"
+            ]
+          },
+          "bpf_dma_M_AXIS_MM2S": {
+            "interface_ports": [
+              "bpf/input_r",
+              "bpf_dma/M_AXIS_MM2S"
+            ]
+          },
+          "demodulate_0_output_r": {
             "interface_ports": [
               "bpf/output_r",
               "bpf_dma/S_AXIS_S2MM"
             ]
           },
-          "axi_dma_0_M_AXIS_MM2S": {
+          "axi_dma_0_M_AXI_MM2S": {
             "interface_ports": [
-              "bpf/input_r",
-              "bpf_dma/M_AXIS_MM2S"
+              "M_AXI_MM2S",
+              "bpf_dma/M_AXI_MM2S"
             ]
           }
         },
@@ -2015,10 +2024,10 @@
       }
     },
     "interface_nets": {
-      "axi_dma_0_M_AXI_S2MM": {
+      "processing_system7_0_M_AXI_GP0": {
         "interface_ports": [
-          "bpfilter/M_AXI_S2MM",
-          "axi_smc/S02_AXI"
+          "processing_system7_0/M_AXI_GP0",
+          "ps7_0_axi_periph/S00_AXI"
         ]
       },
       "processing_system7_0_FIXED_IO": {
@@ -2033,22 +2042,16 @@
           "bpfilter/S_AXI_LITE"
         ]
       },
-      "processing_system7_0_M_AXI_GP0": {
+      "axi_dma_0_M_AXI_SG": {
         "interface_ports": [
-          "processing_system7_0/M_AXI_GP0",
-          "ps7_0_axi_periph/S00_AXI"
+          "bpfilter/M_AXI_SG",
+          "axi_smc/S00_AXI"
         ]
       },
       "axi_dma_0_M_AXI_MM2S": {
         "interface_ports": [
           "bpfilter/M_AXI_MM2S",
           "axi_smc/S01_AXI"
-        ]
-      },
-      "axi_dma_0_M_AXI_SG": {
-        "interface_ports": [
-          "bpfilter/M_AXI_SG",
-          "axi_smc/S00_AXI"
         ]
       },
       "axi_smc_M00_AXI": {
@@ -2061,6 +2064,12 @@
         "interface_ports": [
           "DDR",
           "processing_system7_0/DDR"
+        ]
+      },
+      "axi_dma_0_M_AXI_S2MM": {
+        "interface_ports": [
+          "bpfilter/M_AXI_S2MM",
+          "axi_smc/S02_AXI"
         ]
       }
     },

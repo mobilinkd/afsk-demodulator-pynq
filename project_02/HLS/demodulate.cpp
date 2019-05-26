@@ -53,7 +53,7 @@ void demodulate(stream_type& input, stream_type& output)
 	{
 		input >> idata;
 		odata.data = fir_filter(idata.data, bpf_shift_reg, bpf_coeffs);
-		odata.keep = 1;
+		odata.keep = idata.keep;
 		odata.strb = idata.strb;
 		odata.last = idata.last;
 		output << odata;
