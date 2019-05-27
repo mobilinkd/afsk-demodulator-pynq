@@ -3,7 +3,7 @@
 typedef ap_uint<4> leds_type;
 typedef ap_uint<4> btns_type;
 
-ap_uint<1> count(volatile leds_type& leds_out, int& cntr, btns_type btn_in);
+ap_uint<1> count(volatile leds_type& leds_out, ap_uint<4>& cntr, btns_type btn_in);
 
 class Debouncer {
 	ap_uint<17> counter;
