@@ -1,121 +1,130 @@
+// Copyright 2019 Mobilinkd LLC <rob@mobilinkd.com>
+// All rights reserved.
+
+#pragma once
+
 #include "hysteresis.hpp"
-#include "iir_filter.hpp"
+#include "fir_filter.hpp"
 
 #include "ap_int.h"
+#include "ap_fixed.h"
 #include "hls_math.h"
 
 #include <tuple>
+#include <array>
+#include <iostream>
 
-typedef ap_fixed<18,9> fixed_type;
-
-#define ABS(x) ((x) >= (0) ? (x) : (-x))
+using fixed_type = ap_fixed<18, 6>;
+using coeff_type = ap_fixed<18, 2>;
+using inverse_type = ap_fixed<18, 2>;
 
 namespace pll {
 
-// Loop low-pass filter taps (64Hz Bessel)
-const fixed_type loop_b[] = {
-    0.144668495309,
-    0.144668495309,
-};
-const fixed_type loop_a[] = {
-    1.0,
-    -0.710663009381,
+const std::array<inverse_type, 16> inverse = {
+	1.0, 1.0/2.0, 1.0/3.0, 1.0/4.0, 1.0/5.0, 1.0/6.0, 1.0/7.0, 1.0/8.0,
+	1.0/9.0, 1.0/10.0, 1.0/11.0, 1.0/12.0, 1.0/13.0, 1.0/14.0, 1.0/15.0, 1.0/16.0,
 };
 
-// Lock low-pass filter taps (40Hz Bessel)
-const fixed_type lock_b[] = {
-    0.0951079834025,
-    0.0951079834025,
+/*
+ * FIR Filter coeffs.
+ */
+// 64 Hz loop filter.
+const std::array<coeff_type, 5> loop_coeffs = {
+		0.08160962754214955, 0.25029850550446403, 0.3361837339067726, 0.2502985055044641, 0.08160962754214969
 };
-const fixed_type lock_a[] = {
-    1.0,
-    -0.809784033195,
+// 40 Hz lock filter.
+const std::array<coeff_type, 5> lock_coeffs = {
+		0.07893082388823802, 0.25073951353226703, 0.34065932515898967, 0.25073951353226714, 0.07893082388823815
 };
 
 } // pll
 
+
+const fixed_type ZERO = 0.0;
+
 template <typename Float = fixed_type>
 struct DigitalPLL {
 
-    static const size_t N = 16;
-
     typedef Float float_type;
+    using count_type = ap_fixed<27, 9>;
 
-    ap_int<16> sample_rate_;
-    ap_int<16> symbol_rate_;
     float_type sps_;                        ///< Samples per symbol
-    float_type limit_;                      ///< Samples per symbol / 2
+    count_type limit_;                      ///< Samples per symbol / 2
     Hysteresis<float_type, ap_int<1>> lock_;
 
-    IirFilter<float_type, 2> loop_filter_;
-    IirFilter<float_type, 2> lock_filter_;
+    float_type loop_shift_reg[5];
+    float_type lock_shift_reg[5];
 
-    bool last_;
-    float_type count_;
+    ap_uint<1> locked_{0};
 
-    bool sample_;
+    ap_uint<1> last_;
+    count_type count_;
+
+    ap_uint<1> sample_;
     float_type jitter_;
-    uint8_t bits_;
+    ap_uint<8> bits_;
 
     typedef std::tuple<bool, bool, bool> result_type;
 
-    DigitalPLL(ap_int<16> sample_rate, ap_int<16> symbol_rate)
-    : sample_rate_(sample_rate), symbol_rate_(symbol_rate)
-    , sps_(22)
-    , limit_(sps_ / 2)
-    , lock_(sps_ * float_type(0.025), sps_ * float_type(.15), 1, 0)
-    , loop_filter_(pll::loop_b, pll::loop_a)
-    , lock_filter_(pll::lock_b, pll::lock_a)
-    , last_(false), count_(0), sample_(false)
+    DigitalPLL(ap_fixed<18,17> sample_rate, ap_fixed<18,17> symbol_rate)
+    : sps_(sample_rate / symbol_rate), limit_(sps_ >> 1)
+    , lock_(sps_ * float_type(0.025), sps_ * float_type(0.15), 1, 0)
+    , last_(0), count_(0), sample_(0)
     , jitter_(0.0), bits_(1)
-    {}
+    {
+#pragma HLS ARRAY_PARTITION variable=loop_shift_reg complete dim=1
+#pragma HLS ARRAY_PARTITION variable=lock_shift_reg complete dim=1
+#ifndef __SYNTHESIS__
+    	for (auto x : pll::inverse) {
+    		std::cout << x << " ";
+    	}
+    	std::cout << std::endl;
+    	std::cout << "   SPS: " << sps_ << std::endl;
+    	std::cout << " Limit: " << limit_ << std::endl;
+    	std::cout << "  Lock: " << sps_ * float_type(0.025) << std::endl;
+    	std::cout << "Unlock: " << sps_ * float_type(0.15) << std::endl;
+#endif
 
-    result_type operator()(bool input)
+    }
+
+    void pll(ap_uint<1> input, ap_uint<1>& sample_out, ap_uint<1>& locked_out)
     {
 
-		sample_ = false;
+		sample_ = 0;
 
-		if (input != last_ or bits_ > 127)
+		float_type count_change = -1.0;
+
+		if (input != last_ or bits_[4] == 1)
 		{
 			// Record transition.
 			last_ = input;
 
-			if (count_ > limit_)
-			{
-				count_ -= sps_;
-			}
+			float_type limited = (count_ > limit_ ? sps_ : ZERO);
 
-			float_type offset = count_ / bits_;
-			float_type jitter = loop_filter_(offset);
-			jitter_ = lock_filter_(hls::abs(offset));
+			auto inverse = pll::inverse[(bits_ - 1) & 0x0F];
+			float_type offset = count_ * inverse;
+			float_type abs_offset = offset >= 0 ? (offset - ZERO) : (ZERO - offset);
+			float_type jitter = fixed_fir_filter(offset, loop_shift_reg, pll::loop_coeffs);
+			jitter_ = fixed_fir_filter(abs_offset, lock_shift_reg, pll::lock_coeffs);
 
-			float_type delta = locked() ? float_type(0.012) : float_type(0.048);
-			count_ -= jitter * sps_ * delta;
+			locked_ = lock_(jitter_);
+			float_type delta = locked_ ? float_type(0.012) : float_type(0.048);
+			auto tmp = sps_ * delta;
+			count_change = jitter * tmp + limited - 1;
 			bits_ = 1;
 		}
 		else
 		{
-			if (count_ > limit_)
+			if (count_ >= limit_)
 			{
-				sample_ = true;
-				count_ -= sps_;
+				sample_ = 1;
+				count_change = sps_ - 1;
 				++bits_;
 			}
 		}
 
-		count_ += 1;
-		return result_type(input, sample_, locked());
-    }
-
-    bool locked() {
-        return lock_(jitter_);
-    }
-
-    float_type jitter() {
-    	return jitter_;
-    }
-
-    bool sample() const {
-        return sample_;
+		count_ = count_ - count_change;
+		locked_out = locked_;
+		sample_out = sample_;
     }
 };

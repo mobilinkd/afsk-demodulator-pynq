@@ -1,4 +1,7 @@
-#include <cstddef>
+// Copyright 2019 Mobilinkd LLC <rob@mobilinkd.com>
+// All rights reserved.
+
+#pragma once
 
 template <typename Float, typename Int>
 struct Hysteresis {
